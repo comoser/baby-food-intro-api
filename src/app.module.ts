@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { FoodIntroductionsModule } from './food-introductions/food-introductions.module';
+import { MailModule } from './mail/mail.module';
 
 const GlobalAppGuardPipe = {
   provide: APP_GUARD,
@@ -20,7 +21,9 @@ const GlobalAppValidationPipe = {
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: String(process.env.DB_HOST),
@@ -35,6 +38,7 @@ const GlobalAppValidationPipe = {
     BabiesModule,
     ParentsModule,
     FoodIntroductionsModule,
+    MailModule,
   ],
   providers: [GlobalAppGuardPipe, GlobalAppValidationPipe],
 })

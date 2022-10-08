@@ -22,10 +22,13 @@ import { AnswerShareBabyInvitationRequestDto } from './dtos/share/answer-share-b
 import { ShareBabyInvitationNotFoundException } from './exceptions/share-baby-invitation-not-found.exception';
 import { GetShareBabyInvitationResponseDto } from './dtos/get/get-share-baby-invitation.response.dto';
 import { shareBabyInvitationResponseDtoFactory } from './factories/share-baby-invitation-response-dto.factory';
+import { MailService } from '../mail/mail.service';
+import { ShareBabyInvitationAlreadySentException } from './exceptions/share-baby-invitation-already-sent.exception';
 
 @Injectable()
 export class BabiesService {
   constructor(
+    private readonly mailService: MailService,
     private readonly parentIntegrationService: ParentIntegrationService,
     @InjectRepository(BabyEntity)
     private readonly babiesRepository: Repository<BabyEntity>,
@@ -141,6 +144,15 @@ export class BabiesService {
       throw new BabyNotFoundException();
     }
 
+    const storedShareBabyInvitation =
+      await this.shareBabyInvitationsRepository.findOneBy({
+        baby: storedBabyEntity,
+        otherParentEmail: sendShareBabyInvitationRequestDto.otherParentEmail,
+      });
+    if (storedShareBabyInvitation) {
+      throw new ShareBabyInvitationAlreadySentException();
+    }
+
     const shareBabyInvitationEntity = shareBabyInvitationEntityFactory(
       storedParentEntity,
       storedBabyEntity,
@@ -148,7 +160,11 @@ export class BabiesService {
     );
     await this.shareBabyInvitationsRepository.save(shareBabyInvitationEntity);
 
-    // TODO: send email to receiver
+    this.mailService.sendShareBabyInvitation(
+      storedParentEntity,
+      shareBabyInvitationEntity.otherParentEmail,
+      storedBabyEntity,
+    );
 
     return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
   }
@@ -184,7 +200,12 @@ export class BabiesService {
       await this.babiesRepository.save(storedInvitationEntity.baby);
     }
 
-    // TODO: send mail back to requester
+    this.mailService.answerShareBabyInvitation(
+      storedInvitationEntity.requester,
+      storedParentEntity,
+      storedInvitationEntity.baby,
+      storedInvitationEntity.status,
+    );
 
     return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
   }
