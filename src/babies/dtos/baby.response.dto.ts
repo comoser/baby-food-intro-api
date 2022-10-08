@@ -1,4 +1,4 @@
-import { CreateParentResponseDto } from '../../parents/dtos/create-parent.response.dto';
+import { CreateParentResponseDto } from '../../parents/dtos/create/create-parent.response.dto';
 
 export type BabyResponseDto = {
   id: string;

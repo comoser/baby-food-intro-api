@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ParentEntity } from '../parent.entity';
 import { Repository } from 'typeorm';
-import { ParentDto } from '../dtos/parent.dto';
+import { CreateParentRequestDto } from '../dtos/create/create-parent.request.dto';
 import { hashPassword } from '../../security/hash';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -12,7 +12,9 @@ export class ParentIntegrationService {
     private parentsRepository: Repository<ParentEntity>,
   ) {}
 
-  static async createParentEntity(parentDto: ParentDto): Promise<ParentEntity> {
+  static async createParentEntity(
+    parentDto: CreateParentRequestDto,
+  ): Promise<ParentEntity> {
     const parentEntity = new ParentEntity();
 
     parentEntity.firstName = parentDto.firstName;

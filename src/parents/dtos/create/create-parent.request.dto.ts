@@ -1,6 +1,6 @@
 import { IsString, IsEmail, IsNotEmpty, IsDateString } from 'class-validator';
 
-export class ParentDto {
+export class CreateParentRequestDto {
   @IsString()
   @IsNotEmpty()
   firstName!: string;

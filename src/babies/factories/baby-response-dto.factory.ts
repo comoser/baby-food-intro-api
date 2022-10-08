@@ -1,5 +1,5 @@
 import { BabyEntity } from '../baby.entity';
-import { createParentResponseDto } from '../../parents/factories/create-parent-response-dto.factory';
+import { parentResponseDtoFactory } from '../../parents/factories/parent-response-dto.factory';
 import { BabyResponseDto } from '../dtos/baby.response.dto';
 
 export function babyResponseDtoFactory(
@@ -9,7 +9,7 @@ export function babyResponseDtoFactory(
   function getParents() {
     if (keepRelations)
       return babyEntity.parents.map((parent) =>
-        createParentResponseDto(parent),
+        parentResponseDtoFactory(parent),
       );
     return babyEntity.parents.map((parent) => parent.id);
   }

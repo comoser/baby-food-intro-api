@@ -10,6 +10,8 @@ import {
 } from '@nestjs/common';
 import { BabiesService } from './babies.service';
 import { CreateBabyRequestDto } from './dtos/create/create-baby.request.dto';
+import { SendShareBabyInvitationRequestDto } from './dtos/share/send-share-baby-invitation.request.dto';
+import { AnswerShareBabyInvitationRequestDto } from './dtos/share/answer-share-baby-invitation.request.dto';
 
 @Controller('babies')
 export class BabiesController {
@@ -20,18 +22,20 @@ export class BabiesController {
     return this.babiesService.getAllBabies();
   }
 
+  @Get('/share-invitations')
+  getAllBabyShareInvitations(@Request() request) {
+    return this.babiesService.getAllBabyShareInvitations(request.user);
+  }
+
   @Get('/:id')
   getBaby(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.babiesService.getBaby(id);
   }
 
-  // @Post('/share')
-  // shareBaby(
-  //   @Request() request,
-  //   @Body() shareBabyRequestDto: ShareBabyRequestDto,
-  // ) {
-  //   return this.babiesService.shareBaby(request.user, shareBabyRequestDto);
-  // }
+  @Get('/share-invitations/:id')
+  getBabyShareInvitation(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.babiesService.getBabyShareInvitation(id);
+  }
 
   @Post('/')
   createBaby(
@@ -44,5 +48,29 @@ export class BabiesController {
   @Delete('/:id')
   removeBaby(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.babiesService.removeBaby(id);
+  }
+
+  @Post('/send-share-invitation')
+  sendShareBabyInvitation(
+    @Request() request,
+    @Body()
+    sendShareBabyInvitationRequestDto: SendShareBabyInvitationRequestDto,
+  ) {
+    return this.babiesService.sendShareBabyInvitation(
+      request.user,
+      sendShareBabyInvitationRequestDto,
+    );
+  }
+
+  @Post('/answer-share-invitation')
+  answerShareBabyInvitation(
+    @Request() request,
+    @Body()
+    answerShareBabyInvitationRequestDto: AnswerShareBabyInvitationRequestDto,
+  ) {
+    return this.babiesService.answerShareBabyInvitation(
+      request.user,
+      answerShareBabyInvitationRequestDto,
+    );
   }
 }

@@ -1,3 +1,3 @@
-import { ParentDto } from '../../parents/dtos/parent.dto';
+import { CreateParentRequestDto } from '../../parents/dtos/create/create-parent.request.dto';
 
-export class RegisterUserRequestDto extends ParentDto {}
+export class RegisterUserRequestDto extends CreateParentRequestDto {}

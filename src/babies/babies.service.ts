@@ -12,6 +12,16 @@ import { babyResponseDtoFactory } from './factories/baby-response-dto.factory';
 import { BabyNotFoundException } from './exceptions/baby-not-found.exception';
 import { ParentNotFoundException } from '../parents/exceptions/parent-not-found.exception';
 import { GetBabyResponseDto } from './dtos/get/get-baby.response.dto';
+import { SendShareBabyInvitationRequestDto } from './dtos/share/send-share-baby-invitation.request.dto';
+import { shareBabyInvitationEntityFactory } from './factories/share-baby-invitation-entity.factory';
+import {
+  ShareBabyInvitationEntity,
+  ShareBabyInvitationStatus,
+} from './share-baby-invitation.entity';
+import { AnswerShareBabyInvitationRequestDto } from './dtos/share/answer-share-baby-invitation.request.dto';
+import { ShareBabyInvitationNotFoundException } from './exceptions/share-baby-invitation-not-found.exception';
+import { GetShareBabyInvitationResponseDto } from './dtos/get/get-share-baby-invitation.response.dto';
+import { shareBabyInvitationResponseDtoFactory } from './factories/share-baby-invitation-response-dto.factory';
 
 @Injectable()
 export class BabiesService {
@@ -19,6 +29,8 @@ export class BabiesService {
     private readonly parentIntegrationService: ParentIntegrationService,
     @InjectRepository(BabyEntity)
     private readonly babiesRepository: Repository<BabyEntity>,
+    @InjectRepository(ShareBabyInvitationEntity)
+    private readonly shareBabyInvitationsRepository: Repository<ShareBabyInvitationEntity>,
   ) {}
 
   async getAllBabies() {
@@ -78,6 +90,101 @@ export class BabiesService {
     }
 
     await this.babiesRepository.remove(storedBabyEntity);
+
+    return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
+  }
+
+  async getAllBabyShareInvitations(parent: AuthUser) {
+    const storedShareBabyInvitationEntities =
+      await this.shareBabyInvitationsRepository.findBy({
+        otherParentEmail: parent.email,
+      });
+
+    return HttpResponseDto.createHttpResponseDto<
+      GetShareBabyInvitationResponseDto[]
+    >(HttpStatus.OK, {
+      data: storedShareBabyInvitationEntities.map((invitation) =>
+        shareBabyInvitationResponseDtoFactory(invitation),
+      ),
+    });
+  }
+
+  async getBabyShareInvitation(id: string) {
+    const storedShareBabyInvitationEntity =
+      await this.shareBabyInvitationsRepository.findOneBy({ id });
+
+    return HttpResponseDto.createHttpResponseDto<GetShareBabyInvitationResponseDto>(
+      HttpStatus.OK,
+      {
+        data: shareBabyInvitationResponseDtoFactory(
+          storedShareBabyInvitationEntity,
+        ),
+      },
+    );
+  }
+
+  async sendShareBabyInvitation(
+    parent: AuthUser,
+    sendShareBabyInvitationRequestDto: SendShareBabyInvitationRequestDto,
+  ) {
+    const storedParentEntity = await this.parentIntegrationService.findParentBy(
+      parent.email,
+    );
+    if (!storedParentEntity) {
+      throw new ParentNotFoundException();
+    }
+
+    const storedBabyEntity = await this.babiesRepository.findOneBy({
+      id: sendShareBabyInvitationRequestDto.babyId,
+    });
+    if (!storedBabyEntity) {
+      throw new BabyNotFoundException();
+    }
+
+    const shareBabyInvitationEntity = shareBabyInvitationEntityFactory(
+      storedParentEntity,
+      storedBabyEntity,
+      sendShareBabyInvitationRequestDto,
+    );
+    await this.shareBabyInvitationsRepository.save(shareBabyInvitationEntity);
+
+    // TODO: send email to receiver
+
+    return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
+  }
+
+  async answerShareBabyInvitation(
+    parent: AuthUser,
+    answerShareBabyInvitationRequestDto: AnswerShareBabyInvitationRequestDto,
+  ) {
+    const storedParentEntity = await this.parentIntegrationService.findParentBy(
+      parent.email,
+    );
+    if (!storedParentEntity) {
+      throw new ParentNotFoundException();
+    }
+
+    const storedInvitationEntity =
+      await this.shareBabyInvitationsRepository.findOneBy({
+        id: answerShareBabyInvitationRequestDto.invitationId,
+      });
+    if (!storedInvitationEntity) {
+      throw new ShareBabyInvitationNotFoundException();
+    }
+
+    storedInvitationEntity.status = answerShareBabyInvitationRequestDto.accepted
+      ? ShareBabyInvitationStatus.Accepted
+      : ShareBabyInvitationStatus.Rejected;
+
+    await this.shareBabyInvitationsRepository.save(storedInvitationEntity);
+
+    if (storedInvitationEntity.status === ShareBabyInvitationStatus.Accepted) {
+      storedInvitationEntity.baby.parents.push(storedParentEntity);
+
+      await this.babiesRepository.save(storedInvitationEntity.baby);
+    }
+
+    // TODO: send mail back to requester
 
     return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
   }
