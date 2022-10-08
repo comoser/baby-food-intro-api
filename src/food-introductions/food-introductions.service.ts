@@ -7,7 +7,7 @@ import { BabyIntegrationService } from '../babies/integrations/baby-integration.
 import { BabyNotFoundException } from '../babies/exceptions/baby-not-found.exception';
 import { foodIntroductionEntityFactory } from './factories/food-introduction-entity.factory';
 import { HttpResponseDto } from '../dtos/http.response.dto';
-import { CreateFoodIntroductionResponseDto } from './dtos/create/create-food-introduction.response';
+import { CreateFoodIntroductionResponseDto } from './dtos/create/create-food-introduction.response.dto';
 import { foodIntroductionResponseDtoFactory } from './factories/food-introduction-response-dto.factory';
 import { GetFoodIntroductionResponseDto } from './dtos/get/get-food-introduction.response.dto';
 import { FoodIntroductionNotFoundException } from './exceptions/food-introduction-not-found.exception';
