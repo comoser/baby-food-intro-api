@@ -11,4 +11,4 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /Users/davidalecrim/Workspace/open-source/baby-food-intro/db:/var/lib/postgresql/data
+      - /Users/davidalecrim/Workspace/open-source/baby-food-intro-api/db:/var/lib/postgresql/data
