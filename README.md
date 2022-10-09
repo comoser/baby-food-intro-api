@@ -44,6 +44,14 @@ $ npm run start:debug
 $ npm run start:prod
 ```
 
+## Contributing Guide
+
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+## COC
+
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
 ## License
 
 [MIT licensed](LICENSE).
