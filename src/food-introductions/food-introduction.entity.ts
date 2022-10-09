@@ -2,8 +2,8 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { BabyEntity } from '../babies/baby.entity';
 
 export enum FoodIntroductionResult {
-  Success,
-  Failure,
+  Success = 'Success',
+  Failure = 'Failure',
 }
 
 @Entity()

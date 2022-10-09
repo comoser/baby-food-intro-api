@@ -3,9 +3,9 @@ import { ParentEntity } from '../parents/parent.entity';
 import { BabyEntity } from './baby.entity';
 
 export enum ShareBabyInvitationStatus {
-  Accepted,
-  Pending,
-  Rejected,
+  Accepted = 'Accepted',
+  Pending = 'Pending',
+  Rejected = 'Rejected',
 }
 
 @Entity()
