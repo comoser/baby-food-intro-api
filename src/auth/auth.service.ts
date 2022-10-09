@@ -6,6 +6,7 @@ import { LoginUserResponseDto } from './dtos/login-user.response.dto';
 import { ParentIntegrationService } from '../parents/integrations/parent-integration.service';
 import { passwordMatches } from '../security/hash';
 import { AuthUser } from '../types/auth-user';
+import { parentEntityFactory } from '../parents/factories/parent-entity.factory';
 
 @Injectable()
 export class AuthService {
@@ -29,9 +30,7 @@ export class AuthService {
   }
 
   async registerUser(registerUserRequestDto: RegisterUserRequestDto) {
-    const parentEntity = await ParentIntegrationService.createParentEntity(
-      registerUserRequestDto,
-    );
+    const parentEntity = await parentEntityFactory(registerUserRequestDto);
     await this.parentAuthIntegrationService.saveParent(parentEntity);
 
     return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
