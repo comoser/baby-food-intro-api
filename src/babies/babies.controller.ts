@@ -18,8 +18,8 @@ export class BabiesController {
   constructor(private readonly babiesService: BabiesService) {}
 
   @Get('/')
-  getAllBabies() {
-    return this.babiesService.getAllBabies();
+  getAllBabies(@Request() request) {
+    return this.babiesService.getAllBabies(request.user);
   }
 
   @Get('/share-invitations')

@@ -36,8 +36,12 @@ export class BabiesService {
     private readonly shareBabyInvitationsRepository: Repository<ShareBabyInvitationEntity>,
   ) {}
 
-  async getAllBabies() {
-    const storedBabyEntities = await this.babiesRepository.find();
+  async getAllBabies(parent: AuthUser) {
+    const storedBabyEntities = await this.babiesRepository.find({
+      where: {
+        parents: [parent],
+      },
+    });
 
     return HttpResponseDto.createHttpResponseDto<GetBabyResponseDto[]>(
       HttpStatus.OK,

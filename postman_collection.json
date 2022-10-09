@@ -1,0 +1,552 @@
+{
+	"info": {
+		"_postman_id": "fc5b517b-68ba-4984-a276-e9bfd3ddfd27",
+		"name": "Baby Food Introduction",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "81779"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Miguel\",\n    \"lastName\": \"António\",\n    \"dateOfBirth\": \"1980-01-23T00:00:00\",\n    \"email\": \"miguel.antonio@gmail.com\",\n    \"password\": \"mypassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/auth/register",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"jose.antonio@gmail.com\",\n    \"password\": \"mypassword123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/auth/login",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Baby",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Olívia\",\n    \"lastName\": \"Alecrim\",\n    \"dateOfBirth\": \"2022-07-07T00:00:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Baby",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies/b1a7167a-dd6f-4c43-943d-6872e0ad5bed",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies",
+						"b1a7167a-dd6f-4c43-943d-6872e0ad5bed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Babies",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Baby",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies/4abb6c00-88bd-4802-8c76-f57d12e3759f",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies",
+						"4abb6c00-88bd-4802-8c76-f57d12e3759f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Food Introduction",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"foodName\": \"Potato\",\n    \"date\": \"2022-10-12T00:00:00\",\n    \"preparation\": \"Boiled\",\n    \"presentation\": \"Together with vegetables\",\n    \"babyId\": \"4abb6c00-88bd-4802-8c76-f57d12e3759f\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/food-introductions",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"food-introductions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Food Introductions For Baby",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/food-introductions/baby/4abb6c00-88bd-4802-8c76-f57d12e3759f",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"food-introductions",
+						"baby",
+						"4abb6c00-88bd-4802-8c76-f57d12e3759f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Food Introduction",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/food-introductions/b2415596-a0e0-44ab-9eaa-cb26e141cdcf",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"food-introductions",
+						"b2415596-a0e0-44ab-9eaa-cb26e141cdcf"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Remove Food Introduction",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/food-introductions/56a9eee4-c5a1-491a-81ea-f56d5984b1e5",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"food-introductions",
+						"56a9eee4-c5a1-491a-81ea-f56d5984b1e5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Share Baby Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"otherParentEmail\": \"joanapinheiro.tfala@gmail.com\",\n    \"babyId\": \"4abb6c00-88bd-4802-8c76-f57d12e3759f\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies/send-share-invitation",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies",
+						"send-share-invitation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Answer Share Baby Request",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"accepted\": true,\n    \"invitationId\": \"65ee8bda-3786-4cd3-aec6-fb730a1a219f\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies/answer-share-invitation",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies",
+						"answer-share-invitation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Baby Share Invitations",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies/share-invitations",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies",
+						"share-invitations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Baby Share Invitation",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_BASE_URL}}/babies/share-invitations/4fb0571c-8edb-4be6-ab26-7fcd283a083c",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"babies",
+						"share-invitations",
+						"4fb0571c-8edb-4be6-ab26-7fcd283a083c"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Parent Profile",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"José\",\n    \"dateOfBirth\": \"1981-06-21T00:00:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/parents",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"parents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Parent Profile",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \n}"
+				},
+				"url": {
+					"raw": "{{API_BASE_URL}}/parents",
+					"host": [
+						"{{API_BASE_URL}}"
+					],
+					"path": [
+						"parents"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"if (String(pm.request.url).includes('/auth/register')) return;",
+					"",
+					"const postRequest = {",
+					"  url: `${pm.environment.get('API_BASE_URL')}/auth/login`,",
+					"  method: 'POST',",
+					"  header: {",
+					"    'Content-Type': 'application/json',",
+					"  },",
+					"  body: {",
+					"    mode: 'raw',",
+					"    raw: JSON.stringify({",
+					"        \"email\": \"jose.antonio@gmail.com\",",
+					"        \"password\": \"mypassword123\"",
+					"    })",
+					"  }",
+					"};",
+					"",
+					"pm.sendRequest(postRequest, function (err, response) {",
+					"    const { data: { accessToken } } = response.json();",
+					"    console.log(response.json());",
+					"    pm.environment.set(\"BEARER_TOKEN\", accessToken);",
+					"});",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
