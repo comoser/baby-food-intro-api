@@ -21,12 +21,7 @@ export class FoodIntroductionsService {
   ) {}
 
   async getAllFoodIntroductions(babyId: string) {
-    const storedBabyEntity = await this.babyIntegrationService.findBabyBy(
-      babyId,
-    );
-    if (!storedBabyEntity) {
-      throw new BabyNotFoundException();
-    }
+    const storedBabyEntity = await this.findBabyOrThrow(babyId);
 
     const storedFoodIntroductionsEntities =
       await this.foodIntroductionsRepository.find({
@@ -45,11 +40,9 @@ export class FoodIntroductionsService {
   }
 
   async getFoodIntroduction(id: string) {
-    const storedFoodIntroductionEntity =
-      await this.foodIntroductionsRepository.findOneBy({ id });
-    if (!storedFoodIntroductionEntity) {
-      throw new FoodIntroductionNotFoundException();
-    }
+    const storedFoodIntroductionEntity = await this.findFoodIntroductionOrThrow(
+      id,
+    );
 
     return HttpResponseDto.createHttpResponseDto<GetFoodIntroductionResponseDto>(
       HttpStatus.OK,
@@ -65,12 +58,9 @@ export class FoodIntroductionsService {
   async createFoodIntroduction(
     createFoodIntroductionRequestDto: CreateFoodIntroductionRequestDto,
   ) {
-    const storedBabyEntity = await this.babyIntegrationService.findBabyBy(
+    const storedBabyEntity = await this.findBabyOrThrow(
       createFoodIntroductionRequestDto.babyId,
     );
-    if (!storedBabyEntity) {
-      throw new BabyNotFoundException();
-    }
 
     const foodIntroductionEntity = foodIntroductionEntityFactory(
       storedBabyEntity,
@@ -89,6 +79,27 @@ export class FoodIntroductionsService {
   }
 
   async removeFoodIntroduction(id: string) {
+    const storedFoodIntroductionEntity = await this.findFoodIntroductionOrThrow(
+      id,
+    );
+
+    await this.foodIntroductionsRepository.remove(storedFoodIntroductionEntity);
+
+    return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
+  }
+
+  private async findBabyOrThrow(babyId: string) {
+    const storedBabyEntity = await this.babyIntegrationService.findBabyBy(
+      babyId,
+    );
+    if (!storedBabyEntity) {
+      throw new BabyNotFoundException();
+    }
+
+    return storedBabyEntity;
+  }
+
+  private async findFoodIntroductionOrThrow(id: string) {
     const storedFoodIntroductionEntity =
       await this.foodIntroductionsRepository.findOneBy({
         id,
@@ -97,8 +108,6 @@ export class FoodIntroductionsService {
       throw new FoodIntroductionNotFoundException();
     }
 
-    await this.foodIntroductionsRepository.remove(storedFoodIntroductionEntity);
-
-    return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
+    return storedFoodIntroductionEntity;
   }
 }

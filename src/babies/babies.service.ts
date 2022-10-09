@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { AuthUser } from '../types/auth-user';
 import { CreateBabyRequestDto } from './dtos/create/create-baby.request.dto';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { BabyEntity } from './baby.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { babyEntityFactory } from './factories/baby-entity.factory';
@@ -48,10 +48,7 @@ export class BabiesService {
   }
 
   async getBaby(id: string) {
-    const storedBabyEntity = await this.babiesRepository.findOneBy({ id });
-    if (!storedBabyEntity) {
-      throw new BabyNotFoundException();
-    }
+    const storedBabyEntity = await this.findBabyOrThrow(id);
 
     return HttpResponseDto.createHttpResponseDto<GetBabyResponseDto>(
       HttpStatus.OK,
@@ -65,12 +62,7 @@ export class BabiesService {
     parent: AuthUser,
     createBabyRequestDto: CreateBabyRequestDto,
   ) {
-    const storedParentEntity = await this.parentIntegrationService.findParentBy(
-      parent.email,
-    );
-    if (!storedParentEntity) {
-      throw new ParentNotFoundException();
-    }
+    const storedParentEntity = await this.findParentOrThrow(parent.email);
 
     const babyEntity = babyEntityFactory(
       storedParentEntity,
@@ -87,10 +79,7 @@ export class BabiesService {
   }
 
   async removeBaby(id: string) {
-    const storedBabyEntity = await this.babiesRepository.findOneBy({ id });
-    if (!storedBabyEntity) {
-      throw new BabyNotFoundException();
-    }
+    const storedBabyEntity = await this.findBabyOrThrow(id);
 
     await this.babiesRepository.remove(storedBabyEntity);
 
@@ -114,7 +103,7 @@ export class BabiesService {
 
   async getBabyShareInvitation(id: string) {
     const storedShareBabyInvitationEntity =
-      await this.shareBabyInvitationsRepository.findOneBy({ id });
+      await this.findShareBabyInvitationOrThrow({ id });
 
     return HttpResponseDto.createHttpResponseDto<GetShareBabyInvitationResponseDto>(
       HttpStatus.OK,
@@ -130,19 +119,11 @@ export class BabiesService {
     parent: AuthUser,
     sendShareBabyInvitationRequestDto: SendShareBabyInvitationRequestDto,
   ) {
-    const storedParentEntity = await this.parentIntegrationService.findParentBy(
-      parent.email,
-    );
-    if (!storedParentEntity) {
-      throw new ParentNotFoundException();
-    }
+    const storedParentEntity = await this.findParentOrThrow(parent.email);
 
-    const storedBabyEntity = await this.babiesRepository.findOneBy({
-      id: sendShareBabyInvitationRequestDto.babyId,
-    });
-    if (!storedBabyEntity) {
-      throw new BabyNotFoundException();
-    }
+    const storedBabyEntity = await this.findBabyOrThrow(
+      sendShareBabyInvitationRequestDto.babyId,
+    );
 
     const storedShareBabyInvitation =
       await this.shareBabyInvitationsRepository.findOneBy({
@@ -173,40 +154,72 @@ export class BabiesService {
     parent: AuthUser,
     answerShareBabyInvitationRequestDto: AnswerShareBabyInvitationRequestDto,
   ) {
+    const storedParentEntity = await this.findParentOrThrow(parent.email);
+
+    const storedShareBabyInvitationEntity =
+      await this.findShareBabyInvitationOrThrow({
+        id: answerShareBabyInvitationRequestDto.invitationId,
+      });
+
+    storedShareBabyInvitationEntity.status =
+      answerShareBabyInvitationRequestDto.accepted
+        ? ShareBabyInvitationStatus.Accepted
+        : ShareBabyInvitationStatus.Rejected;
+
+    await this.shareBabyInvitationsRepository.save(
+      storedShareBabyInvitationEntity,
+    );
+
+    if (
+      storedShareBabyInvitationEntity.status ===
+      ShareBabyInvitationStatus.Accepted
+    ) {
+      storedShareBabyInvitationEntity.baby.parents.push(storedParentEntity);
+
+      await this.babiesRepository.save(storedShareBabyInvitationEntity.baby);
+    }
+
+    this.mailService.answerShareBabyInvitation(
+      storedShareBabyInvitationEntity.requester,
+      storedParentEntity,
+      storedShareBabyInvitationEntity.baby,
+      storedShareBabyInvitationEntity.status,
+    );
+
+    return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
+  }
+
+  private async findParentOrThrow(parentEmail: string) {
     const storedParentEntity = await this.parentIntegrationService.findParentBy(
-      parent.email,
+      parentEmail,
     );
     if (!storedParentEntity) {
       throw new ParentNotFoundException();
     }
 
-    const storedInvitationEntity =
-      await this.shareBabyInvitationsRepository.findOneBy({
-        id: answerShareBabyInvitationRequestDto.invitationId,
-      });
-    if (!storedInvitationEntity) {
+    return storedParentEntity;
+  }
+
+  private async findBabyOrThrow(babyId: string) {
+    const storedBabyEntity = await this.babiesRepository.findOneBy({
+      id: babyId,
+    });
+    if (!storedBabyEntity) {
+      throw new BabyNotFoundException();
+    }
+
+    return storedBabyEntity;
+  }
+
+  private async findShareBabyInvitationOrThrow(
+    whereOptions: FindOptionsWhere<ShareBabyInvitationEntity>,
+  ) {
+    const storedShareBabyInvitationEntity =
+      await this.shareBabyInvitationsRepository.findOneBy(whereOptions);
+    if (!storedShareBabyInvitationEntity) {
       throw new ShareBabyInvitationNotFoundException();
     }
 
-    storedInvitationEntity.status = answerShareBabyInvitationRequestDto.accepted
-      ? ShareBabyInvitationStatus.Accepted
-      : ShareBabyInvitationStatus.Rejected;
-
-    await this.shareBabyInvitationsRepository.save(storedInvitationEntity);
-
-    if (storedInvitationEntity.status === ShareBabyInvitationStatus.Accepted) {
-      storedInvitationEntity.baby.parents.push(storedParentEntity);
-
-      await this.babiesRepository.save(storedInvitationEntity.baby);
-    }
-
-    this.mailService.answerShareBabyInvitation(
-      storedInvitationEntity.requester,
-      storedParentEntity,
-      storedInvitationEntity.baby,
-      storedInvitationEntity.status,
-    );
-
-    return HttpResponseDto.createHttpResponseDto(HttpStatus.NO_CONTENT);
+    return storedShareBabyInvitationEntity;
   }
 }
