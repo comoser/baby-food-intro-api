@@ -5,10 +5,12 @@ import {
   ManyToMany,
   Index,
   JoinTable,
+  Unique,
 } from 'typeorm';
 import { BabyEntity } from '../babies/baby.entity';
 
 @Entity()
+@Unique(['email'])
 export class ParentEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
