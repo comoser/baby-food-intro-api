@@ -44,6 +44,11 @@ $ npm run start:debug
 $ npm run start:prod
 ```
 
+## Documentation
+
+There's a [Postman collection](postman_collection.json) in the repo that allows to consume all the endpoints created.
+If there are new additions to the controllers of the API, please add them to this postman collection, so that other devs have an easier life!
+
 ## Contributing Guide
 
 [CONTRIBUTING.md](CONTRIBUTING.md).
