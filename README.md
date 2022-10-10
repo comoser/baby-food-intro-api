@@ -49,6 +49,11 @@ $ yarn run start:prod
 There's a [Postman collection](postman_collection.json) in the repo that allows to consume all the endpoints created.
 If there are new additions to the controllers of the API, please add them to this postman collection, so that other devs have an easier life!
 
+## Production
+
+We are using Heroku to deploy the API and to provision the corresponding database.
+There's a production API currently deployed at [https://baby-food-intro-api.herokuapp.com/api/v1](https://baby-food-intro-api.herokuapp.com/api/v1).
+
 ## Contributing Guide
 
 [CONTRIBUTING.md](CONTRIBUTING.md).
