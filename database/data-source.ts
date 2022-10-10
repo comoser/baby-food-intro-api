@@ -10,7 +10,7 @@ const ormDbConfig: PostgresConnectionOptions = {
   schema: 'public',
   url: process.env.DATABASE_URL,
   migrationsTableName: 'migrations',
-  migrations: ['dist/migrations/*{.ts,.js}'],
+  migrations: ['dist/database/migrations/*{.ts,.js}'],
   migrationsRun: true,
   logging: false,
 };
