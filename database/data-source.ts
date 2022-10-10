@@ -10,13 +10,14 @@ const ormDbConfig: PostgresConnectionOptions = {
   schema: 'public',
   url: process.env.DATABASE_URL,
   migrationsTableName: 'migrations',
-  migrations: ['dist/database/migrations/*{.ts,.js}'],
+  migrations: ['dist/database/migrations/*.js'],
   migrationsRun: true,
   logging: false,
 };
 
 // Specific config for production
 const ormConfigProduction: Partial<PostgresConnectionOptions> = {
+  entities: ['dist/**/*.entity.js'],
   migrations: ['dist/database/migrations/*.js'],
   synchronize: false,
   ssl: {
