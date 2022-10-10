@@ -26,12 +26,15 @@ const GlobalAppValidationPipe = {
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: String(process.env.DB_HOST),
-      port: Number(process.env.DB_PORT),
-      username: String(process.env.DB_USERNAME),
-      password: String(process.env.DB_PASSWORD),
-      database: String(process.env.DB_DATABASE_NAME),
-      synchronize: true,
+      url: process.env.DATABASE_URL,
+      ...(process.env.NODE_ENV === 'production'
+        ? {
+            ssl: {
+              rejectUnauthorized: false,
+            },
+          }
+        : {}),
+      synchronize: process.env.NODE_ENV !== 'production',
       autoLoadEntities: true,
     }),
     AuthModule,
