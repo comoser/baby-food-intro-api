@@ -16,7 +16,7 @@ For this exact purpose, I created the Baby Food Introduction application, to hel
 ## Installation
 
 ```bash
-$ npm install
+$ yarn install
 ```
 
 ## Running the app
@@ -32,16 +32,16 @@ $ npm install
 
 ```bash
 # development
-$ npm run start
+$ yarn run start
 
 # watch mode
-$ npm run start:dev
+$ yarn run start:dev
 
 # debug mode
-$ npm run start:debug 
+$ yarn run start:debug 
 
 # production mode
-$ npm run start:prod
+$ yarn run start:prod
 ```
 
 ## Documentation
