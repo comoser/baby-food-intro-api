@@ -21,7 +21,7 @@ import { ConfigService } from '@nestjs/config';
           from: `"No Reply" <${config.get('MAIL_FROM')}>`,
         },
         template: {
-          dir: __dirname + '/../templates',
+          dir: __dirname + '/../../mail/templates',
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
