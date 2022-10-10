@@ -35,6 +35,7 @@ const GlobalAppValidationPipe = {
           }
         : {}),
       synchronize: process.env.NODE_ENV !== 'production',
+      entities: ['dist/**/*.entity{.ts,.js}'],
       autoLoadEntities: true,
     }),
     AuthModule,
