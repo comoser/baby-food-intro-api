@@ -62,6 +62,17 @@ There's a production API currently deployed at [https://baby-food-intro-api.hero
 
 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 ## License
 
 [MIT licensed](LICENSE).
