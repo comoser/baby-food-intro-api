@@ -22,6 +22,16 @@
         "ideas",
         "tool"
       ]
+    },
+    {
+      "login": "dNhunter3107",
+      "name": "Debasis Nayak",
+      "avatar_url": "https://avatars.githubusercontent.com/u/91651461?v=4",
+      "profile": "https://github.com/dNhunter3107",
+      "contributions": [
+        "doc",
+        "tool"
+      ]
     }
   ],
   "commitConvention": "angular"
