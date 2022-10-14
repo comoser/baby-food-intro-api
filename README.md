@@ -67,6 +67,13 @@ There's a production API currently deployed at [https://baby-food-intro-api.hero
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://tiagomichaelsousa.dev"><img src="https://avatars.githubusercontent.com/u/28356381?v=4?s=100" width="100px;" alt="Tiago Sousa"/><br /><sub><b>Tiago Sousa</b></sub></a><br /><a href="https://github.com/comoser/baby-food-intro-api/commits?author=tiagomichaelsousa" title="Code">💻</a> <a href="https://github.com/comoser/baby-food-intro-api/commits?author=tiagomichaelsousa" title="Documentation">📖</a> <a href="#ideas-tiagomichaelsousa" title="Ideas, Planning, & Feedback">🤔</a> <a href="#tool-tiagomichaelsousa" title="Tools">🔧</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
