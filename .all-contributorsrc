@@ -1,6 +1,6 @@
 {
   "contributorsPerLine": 6,
-  "projectName": "Baby Food Intro API",
+  "projectName": "baby-food-intro-api",
   "projectOwner": "comoser",
   "repoType": "github",
   "repoHost": "https://github.com",
@@ -11,5 +11,18 @@
   "imageSize": 100,
   "commit": false,
   "contributors": [
-  ]
+    {
+      "login": "tiagomichaelsousa",
+      "name": "Tiago Sousa",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28356381?v=4",
+      "profile": "https://tiagomichaelsousa.dev",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "tool"
+      ]
+    }
+  ],
+  "commitConvention": "angular"
 }
