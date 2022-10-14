@@ -1,0 +1,15 @@
+{
+  "contributorsPerLine": 6,
+  "projectName": "Baby Food Intro API",
+  "projectOwner": "comoser",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true,
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+  ]
+}
