@@ -32,6 +32,20 @@
         "doc",
         "tool"
       ]
+    },
+    {
+      "login": "comoser",
+      "name": "David Alecrim",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5495320?v=4",
+      "profile": "https://github.com/comoser",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "maintenance",
+        "review",
+        "tool"
+      ]
     }
   ],
   "commitConvention": "angular"
