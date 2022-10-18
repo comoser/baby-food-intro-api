@@ -5,12 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateFoodIntroductionRequestDto } from './dtos/create/create-food-introduction.request.dto';
 import { BabyIntegrationService } from '../babies/integrations/baby-integration.service';
 import { BabyNotFoundException } from '../babies/exceptions/baby-not-found.exception';
-import { foodIntroductionEntityFactory } from './factories/food-introduction-entity.factory';
+import { createFoodIntroductionEntityFactory } from './factories/create-food-introduction-entity.factory';
 import { HttpResponseDto } from '../dtos/http.response.dto';
 import { CreateFoodIntroductionResponseDto } from './dtos/create/create-food-introduction.response.dto';
 import { foodIntroductionResponseDtoFactory } from './factories/food-introduction-response-dto.factory';
 import { GetFoodIntroductionResponseDto } from './dtos/get/get-food-introduction.response.dto';
 import { FoodIntroductionNotFoundException } from './exceptions/food-introduction-not-found.exception';
+import { UpdateFoodIntroductionRequestDto } from './dtos/update/update-food-introduction.request.dto';
+import { updateFoodIntroductionEntityFactory } from './factories/update-food-introduction-entity.factory';
+import { UpdateFoodIntroductionResponseDto } from './dtos/update/update-food-introduction.response.dto';
 
 @Injectable()
 export class FoodIntroductionsService {
@@ -62,7 +65,7 @@ export class FoodIntroductionsService {
       createFoodIntroductionRequestDto.babyId,
     );
 
-    const foodIntroductionEntity = foodIntroductionEntityFactory(
+    const foodIntroductionEntity = createFoodIntroductionEntityFactory(
       storedBabyEntity,
       createFoodIntroductionRequestDto,
     );
@@ -74,6 +77,29 @@ export class FoodIntroductionsService {
       HttpStatus.CREATED,
       {
         data: foodIntroductionResponseDtoFactory(storedFoodIntroductionEntity),
+      },
+    );
+  }
+
+  async updateFoodIntroduction(
+    id: string,
+    updateFoodIntroductionRequestDto: UpdateFoodIntroductionRequestDto,
+  ) {
+    const storedFoodIntroductionEntity = await this.findFoodIntroductionOrThrow(
+      id,
+    );
+
+    const updatedFoodIntroductionEntity = updateFoodIntroductionEntityFactory(
+      storedFoodIntroductionEntity,
+      updateFoodIntroductionRequestDto,
+    );
+
+    await this.foodIntroductionsRepository.save(updatedFoodIntroductionEntity);
+
+    return HttpResponseDto.createHttpResponseDto<UpdateFoodIntroductionResponseDto>(
+      HttpStatus.OK,
+      {
+        data: foodIntroductionResponseDtoFactory(updatedFoodIntroductionEntity),
       },
     );
   }

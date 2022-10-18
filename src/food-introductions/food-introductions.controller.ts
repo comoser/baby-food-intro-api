@@ -5,11 +5,12 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
-  Request,
 } from '@nestjs/common';
 import { FoodIntroductionsService } from './food-introductions.service';
 import { CreateFoodIntroductionRequestDto } from './dtos/create/create-food-introduction.request.dto';
+import { UpdateFoodIntroductionRequestDto } from './dtos/update/update-food-introduction.request.dto';
 
 @Controller('food-introductions')
 export class FoodIntroductionsController {
@@ -31,11 +32,21 @@ export class FoodIntroductionsController {
 
   @Post('/')
   createFoodIntroduction(
-    @Request() request,
     @Body() createFoodIntroductionRequestDto: CreateFoodIntroductionRequestDto,
   ) {
     return this.foodIntroductionsService.createFoodIntroduction(
       createFoodIntroductionRequestDto,
+    );
+  }
+
+  @Patch('/:id')
+  updateFoodIntroduction(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() updateFoodIntroductionRequestDto: UpdateFoodIntroductionRequestDto,
+  ) {
+    return this.foodIntroductionsService.updateFoodIntroduction(
+      id,
+      updateFoodIntroductionRequestDto,
     );
   }
 
