@@ -24,6 +24,10 @@ import { GetShareBabyInvitationResponseDto } from './dtos/get/get-share-baby-inv
 import { shareBabyInvitationResponseDtoFactory } from './factories/share-baby-invitation-response-dto.factory';
 import { MailService } from '../mail/mail.service';
 import { ShareBabyInvitationAlreadySentException } from './exceptions/share-baby-invitation-already-sent.exception';
+import { UpdateBabyRequestDto } from './dtos/update/update-baby.request.dto';
+import { BabyDontBelongToParentException } from './exceptions/baby-dont-belong-to-parent.exception';
+import { UpdateBabyResponseDto } from './dtos/update/update-baby.response.dto';
+import { BabyEntityBuilder } from './baby.entity.builder';
 
 @Injectable()
 export class BabiesService {
@@ -51,8 +55,13 @@ export class BabiesService {
     );
   }
 
-  async getBaby(id: string) {
+  async getBaby(parent: AuthUser, id: string) {
     const storedBabyEntity = await this.findBabyOrThrow(id);
+
+    await this.checkIfBabyIsChildOfAuthenticatedParentOrThrow(
+      storedBabyEntity,
+      parent,
+    );
 
     return HttpResponseDto.createHttpResponseDto<GetBabyResponseDto>(
       HttpStatus.OK,
@@ -82,8 +91,53 @@ export class BabiesService {
     );
   }
 
-  async removeBaby(id: string) {
+  async updateBaby(
+    parent: AuthUser,
+    id: string,
+    updateBabyRequestDto: UpdateBabyRequestDto,
+  ) {
     const storedBabyEntity = await this.findBabyOrThrow(id);
+
+    await this.checkIfBabyIsChildOfAuthenticatedParentOrThrow(
+      storedBabyEntity,
+      parent,
+    );
+
+    const updatedBabyEntityBuilder = new BabyEntityBuilder(storedBabyEntity);
+
+    if (updateBabyRequestDto.firstName) {
+      updatedBabyEntityBuilder.withFirstName(updateBabyRequestDto.firstName);
+    }
+
+    if (updateBabyRequestDto.firstName) {
+      updatedBabyEntityBuilder.withLastName(updateBabyRequestDto.lastName);
+    }
+
+    if (updateBabyRequestDto.dateOfBirth) {
+      updatedBabyEntityBuilder.withDateOfBirth(
+        updateBabyRequestDto.dateOfBirth.split('T')[0],
+      );
+    }
+
+    const updatedBabyEntity = updatedBabyEntityBuilder.build();
+
+    await this.babiesRepository.save(updatedBabyEntity);
+
+    return HttpResponseDto.createHttpResponseDto<UpdateBabyResponseDto>(
+      HttpStatus.OK,
+      {
+        data: babyResponseDtoFactory(updatedBabyEntity),
+      },
+    );
+  }
+
+  async removeBaby(parent: AuthUser, id: string) {
+    const storedBabyEntity = await this.findBabyOrThrow(id);
+
+    await this.checkIfBabyIsChildOfAuthenticatedParentOrThrow(
+      storedBabyEntity,
+      parent,
+    );
 
     await this.babiesRepository.remove(storedBabyEntity);
 
@@ -105,9 +159,9 @@ export class BabiesService {
     });
   }
 
-  async getBabyShareInvitation(id: string) {
+  async getBabyShareInvitation(parent: AuthUser, id: string) {
     const storedShareBabyInvitationEntity =
-      await this.findShareBabyInvitationOrThrow({ id });
+      await this.findShareBabyInvitationOrThrow({ id, requester: parent });
 
     return HttpResponseDto.createHttpResponseDto<GetShareBabyInvitationResponseDto>(
       HttpStatus.OK,
@@ -225,5 +279,14 @@ export class BabiesService {
     }
 
     return storedShareBabyInvitationEntity;
+  }
+
+  private async checkIfBabyIsChildOfAuthenticatedParentOrThrow(
+    baby: BabyEntity,
+    parent: AuthUser,
+  ) {
+    if (!baby.parents.map((parent) => parent.id).includes(parent.id)) {
+      throw new BabyDontBelongToParentException();
+    }
   }
 }
