@@ -4,7 +4,7 @@ import { CreateBabyRequestDto } from './dtos/create/create-baby.request.dto';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { BabyEntity } from './baby.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { babyEntityFactory } from './factories/baby-entity.factory';
+import { createBabyEntityFactory } from './factories/create-baby-entity.factory';
 import { ParentIntegrationService } from '../parents/integrations/parent-integration.service';
 import { HttpResponseDto } from '../dtos/http.response.dto';
 import { CreateBabyResponseDto } from './dtos/create/create-baby.response.dto';
@@ -27,7 +27,7 @@ import { ShareBabyInvitationAlreadySentException } from './exceptions/share-baby
 import { UpdateBabyRequestDto } from './dtos/update/update-baby.request.dto';
 import { BabyDontBelongToParentException } from './exceptions/baby-dont-belong-to-parent.exception';
 import { UpdateBabyResponseDto } from './dtos/update/update-baby.response.dto';
-import { BabyEntityBuilder } from './baby.entity.builder';
+import { updateBabyEntityFactory } from './factories/update-baby-entity.factory';
 
 @Injectable()
 export class BabiesService {
@@ -77,7 +77,7 @@ export class BabiesService {
   ) {
     const storedParentEntity = await this.findParentOrThrow(parent.email);
 
-    const babyEntity = babyEntityFactory(
+    const babyEntity = createBabyEntityFactory(
       storedParentEntity,
       createBabyRequestDto,
     );
@@ -103,23 +103,10 @@ export class BabiesService {
       parent,
     );
 
-    const updatedBabyEntityBuilder = new BabyEntityBuilder(storedBabyEntity);
-
-    if (updateBabyRequestDto.firstName) {
-      updatedBabyEntityBuilder.withFirstName(updateBabyRequestDto.firstName);
-    }
-
-    if (updateBabyRequestDto.firstName) {
-      updatedBabyEntityBuilder.withLastName(updateBabyRequestDto.lastName);
-    }
-
-    if (updateBabyRequestDto.dateOfBirth) {
-      updatedBabyEntityBuilder.withDateOfBirth(
-        updateBabyRequestDto.dateOfBirth.split('T')[0],
-      );
-    }
-
-    const updatedBabyEntity = updatedBabyEntityBuilder.build();
+    const updatedBabyEntity = updateBabyEntityFactory(
+      storedBabyEntity,
+      updateBabyRequestDto,
+    );
 
     await this.babiesRepository.save(updatedBabyEntity);
 

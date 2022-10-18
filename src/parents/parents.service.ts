@@ -8,7 +8,7 @@ import { ParentNotFoundException } from './exceptions/parent-not-found.exception
 import { HttpResponseDto } from '../dtos/http.response.dto';
 import { ParentResponseDto } from './dtos/parent.response.dto';
 import { parentResponseDtoFactory } from './factories/parent-response-dto.factory';
-import { hashPassword } from '../security/hash';
+import { updateParentEntityFactory } from './factories/update-parent-entity.factory';
 
 @Injectable()
 export class ParentsService {
@@ -34,17 +34,17 @@ export class ParentsService {
   ) {
     const storedParentEntity = await this.findParentOrThrow(parent.email);
 
-    await this.updateParentEntityFromDto(
+    const updatedParentEntity = await updateParentEntityFactory(
       storedParentEntity,
       updateParentProfileRequestDto,
     );
 
-    await this.parentsRepository.save(storedParentEntity);
+    await this.parentsRepository.save(updatedParentEntity);
 
     return HttpResponseDto.createHttpResponseDto<ParentResponseDto>(
       HttpStatus.OK,
       {
-        data: parentResponseDtoFactory(storedParentEntity),
+        data: parentResponseDtoFactory(updatedParentEntity),
       },
     );
   }
@@ -58,15 +58,5 @@ export class ParentsService {
     }
 
     return storedParentEntity;
-  }
-
-  private async updateParentEntityFromDto(
-    parent: ParentEntity,
-    dto: UpdateParentProfileRequestDto,
-  ) {
-    if (dto.firstName) parent.firstName = dto.firstName;
-    if (dto.lastName) parent.lastName = dto.lastName;
-    if (dto.dateOfBirth) parent.dateOfBirth = dto.dateOfBirth.split('T')[0];
-    if (dto.password) parent.password = await hashPassword(dto.password);
   }
 }

@@ -2,7 +2,7 @@ import { ParentEntity } from '../../parents/parent.entity';
 import { CreateBabyRequestDto } from '../dtos/create/create-baby.request.dto';
 import { BabyEntityBuilder } from '../baby.entity.builder';
 
-export function babyEntityFactory(
+export function createBabyEntityFactory(
   parentEntity: ParentEntity,
   createBabyRequestDto: CreateBabyRequestDto,
 ) {
