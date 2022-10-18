@@ -6,7 +6,7 @@ export class BabyDontBelongToParentException extends HttpException {
     const response = HttpResponseDto.createHttpResponseDto(
       HttpStatus.FORBIDDEN,
       {
-        error: 'The requested baby is a child of the authenticated parent',
+        error: 'The requested baby is not a child of the authenticated parent',
       },
     );
     super(response, response.statusCode);
