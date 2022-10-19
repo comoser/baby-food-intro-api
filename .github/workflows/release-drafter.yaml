@@ -6,11 +6,15 @@ on:
       - main
 
 jobs:
+
   update_release_draft:
     name: Release drafter
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Update Release Draft
         uses: release-drafter/release-drafter@v5
         env:
