@@ -8,7 +8,7 @@ on:
 jobs:
   update_release_draft:
     name: Release drafter
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Update Release Draft
