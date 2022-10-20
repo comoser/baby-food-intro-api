@@ -1,7 +1,7 @@
 name: Label Checker
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - synchronize
@@ -9,6 +9,9 @@ on:
       - labeled
       - unlabeled
 
+permissions:
+  pull-requests: write
+  
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
   cancel-in-progress: true
@@ -21,6 +24,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
       
       - name: Check for Semver labels
         uses: danielchabr/pr-labels-checker@v3.1
@@ -35,6 +41,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
 
       - uses: danielchabr/pr-labels-checker@v3.1
         with:
