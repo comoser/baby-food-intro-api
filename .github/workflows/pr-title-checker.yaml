@@ -15,9 +15,12 @@ concurrency:
 jobs:
   title-checker:
     name: Check PR title
-    runs-on: [ self-hosted ]
+    runs-on: ubuntu-latest
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - uses: aslafy-z/conventional-pr-title-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
