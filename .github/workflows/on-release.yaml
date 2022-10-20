@@ -39,14 +39,10 @@ jobs:
         run: cat ./package.json
 
       - name: Automated Version Bump
-        id: version-bump
-        uses: phips28/gh-action-bump-version@v9.0.31
+        uses: pocket-apps/action-update-version@v1
         with:
-          tag-prefix: 'v'
-          skip-tag: 'true'
-          commit-message: 'CI: bumps version to {{version}} [skip ci]'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'ci: update version to v%version% [skip ci]'
 
       - name: cat package.json
         run: cat ./package.json
