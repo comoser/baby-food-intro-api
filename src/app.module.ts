@@ -1,4 +1,9 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  ValidationPipe,
+} from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BabiesModule } from './babies/babies.module';
 import { ParentsModule } from './parents/parents.module';
@@ -9,6 +14,8 @@ import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { FoodIntroductionsModule } from './food-introductions/food-introductions.module';
 import { MailModule } from './mail/mail.module';
 import dataSource from '../database/data-source';
+
+import { LoggerMiddleware } from './logging/logger.middleware';
 
 const GlobalAppGuardPipe = {
   provide: APP_GUARD,
@@ -34,4 +41,8 @@ const GlobalAppValidationPipe = {
   ],
   providers: [GlobalAppGuardPipe, GlobalAppValidationPipe],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

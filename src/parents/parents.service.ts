@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { ParentEntity } from './parent.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,12 +12,16 @@ import { updateParentEntityFactory } from './factories/update-parent-entity.fact
 
 @Injectable()
 export class ParentsService {
+  private readonly logger: Logger = new Logger(ParentsService.name);
+
   constructor(
     @InjectRepository(ParentEntity)
     private readonly parentsRepository: Repository<ParentEntity>,
   ) {}
 
   async getParentProfile(parent: AuthUser) {
+    this.logger.log(`Received request to get parent profile ${parent.email}`);
+
     const storedParentEntity = await this.findParentOrThrow(parent.email);
 
     return HttpResponseDto.createHttpResponseDto<ParentResponseDto>(
@@ -32,6 +36,10 @@ export class ParentsService {
     parent: AuthUser,
     updateParentProfileRequestDto: UpdateParentProfileRequestDto,
   ) {
+    this.logger.log(
+      `Received request to update parent profile with email ${parent.email}`,
+    );
+
     const storedParentEntity = await this.findParentOrThrow(parent.email);
 
     const updatedParentEntity = await updateParentEntityFactory(
