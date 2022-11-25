@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { AuthUser } from '../types/auth-user';
 import { CreateBabyRequestDto } from './dtos/create/create-baby.request.dto';
 import { FindOptionsWhere, Repository } from 'typeorm';
@@ -31,6 +31,8 @@ import { updateBabyEntityFactory } from './factories/update-baby-entity.factory'
 
 @Injectable()
 export class BabiesService {
+  private readonly logger: Logger = new Logger(BabiesService.name);
+
   constructor(
     private readonly mailService: MailService,
     private readonly parentIntegrationService: ParentIntegrationService,
@@ -41,6 +43,9 @@ export class BabiesService {
   ) {}
 
   async getAllBabies(parent: AuthUser) {
+    this.logger.log(
+      `Received request to get all babies from user ${parent.email}`,
+    );
     const storedBabyEntities = await this.babiesRepository.find({
       where: {
         parents: [parent],
@@ -56,6 +61,9 @@ export class BabiesService {
   }
 
   async getBaby(parent: AuthUser, id: string) {
+    this.logger.log(
+      `Received request to get baby with id ${id} and user id ${parent.email}`,
+    );
     const storedBabyEntity = await this.findBabyOrThrow(id);
 
     await this.checkIfBabyIsChildOfAuthenticatedParentOrThrow(
@@ -75,6 +83,7 @@ export class BabiesService {
     parent: AuthUser,
     createBabyRequestDto: CreateBabyRequestDto,
   ) {
+    this.logger.log(`Received request to create baby for user ${parent.email}`);
     const storedParentEntity = await this.findParentOrThrow(parent.email);
 
     const babyEntity = createBabyEntityFactory(
@@ -96,6 +105,9 @@ export class BabiesService {
     id: string,
     updateBabyRequestDto: UpdateBabyRequestDto,
   ) {
+    this.logger.log(
+      `Received request to update baby with id ${id} for user ${parent.email}`,
+    );
     const storedBabyEntity = await this.findBabyOrThrow(id);
 
     await this.checkIfBabyIsChildOfAuthenticatedParentOrThrow(
@@ -119,6 +131,10 @@ export class BabiesService {
   }
 
   async removeBaby(parent: AuthUser, id: string) {
+    this.logger.log(
+      `Received request to remove baby with id ${id} for user ${parent.email}`,
+    );
+
     const storedBabyEntity = await this.findBabyOrThrow(id);
 
     await this.checkIfBabyIsChildOfAuthenticatedParentOrThrow(
@@ -132,6 +148,10 @@ export class BabiesService {
   }
 
   async getAllBabyShareInvitations(parent: AuthUser) {
+    this.logger.log(
+      `Received request to get all  baby share invitations for user ${parent.email}`,
+    );
+
     const storedShareBabyInvitationEntities =
       await this.shareBabyInvitationsRepository.findBy({
         otherParentEmail: parent.email,
@@ -147,6 +167,9 @@ export class BabiesService {
   }
 
   async getBabyShareInvitation(parent: AuthUser, id: string) {
+    this.logger.log(
+      `Received request to get baby share invitation for baby with id ${id} and user ${parent.email}`,
+    );
     const storedShareBabyInvitationEntity =
       await this.findShareBabyInvitationOrThrow({ id, requester: parent });
 
@@ -164,6 +187,10 @@ export class BabiesService {
     parent: AuthUser,
     sendShareBabyInvitationRequestDto: SendShareBabyInvitationRequestDto,
   ) {
+    this.logger.log(
+      `Received request to share baby for parent ${parent.email}`,
+    );
+
     const storedParentEntity = await this.findParentOrThrow(parent.email);
 
     const storedBabyEntity = await this.findBabyOrThrow(
@@ -199,6 +226,9 @@ export class BabiesService {
     parent: AuthUser,
     answerShareBabyInvitationRequestDto: AnswerShareBabyInvitationRequestDto,
   ) {
+    this.logger.log(
+      `Received request to answer share baby invitation for parent ${parent.email}`,
+    );
     const storedParentEntity = await this.findParentOrThrow(parent.email);
 
     const storedShareBabyInvitationEntity =

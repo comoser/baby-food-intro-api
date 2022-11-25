@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { FoodIntroductionEntity } from './food-introduction.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,6 +17,8 @@ import { UpdateFoodIntroductionResponseDto } from './dtos/update/update-food-int
 
 @Injectable()
 export class FoodIntroductionsService {
+  private readonly logger: Logger = new Logger(FoodIntroductionEntity.name);
+
   constructor(
     private readonly babyIntegrationService: BabyIntegrationService,
     @InjectRepository(FoodIntroductionEntity)
@@ -24,6 +26,10 @@ export class FoodIntroductionsService {
   ) {}
 
   async getAllFoodIntroductions(babyId: string) {
+    this.logger.log(
+      `Received request to get all food introductions for baby with id ${babyId}`,
+    );
+
     const storedBabyEntity = await this.findBabyOrThrow(babyId);
 
     const storedFoodIntroductionsEntities =
@@ -43,6 +49,8 @@ export class FoodIntroductionsService {
   }
 
   async getFoodIntroduction(id: string) {
+    this.logger.log(`Received request to get food introduction with id ${id}`);
+
     const storedFoodIntroductionEntity = await this.findFoodIntroductionOrThrow(
       id,
     );
@@ -61,6 +69,10 @@ export class FoodIntroductionsService {
   async createFoodIntroduction(
     createFoodIntroductionRequestDto: CreateFoodIntroductionRequestDto,
   ) {
+    this.logger.log(
+      `Received request to create food introduction for babyId ${createFoodIntroductionEntityFactory.name}`,
+    );
+
     const storedBabyEntity = await this.findBabyOrThrow(
       createFoodIntroductionRequestDto.babyId,
     );
@@ -85,6 +97,9 @@ export class FoodIntroductionsService {
     id: string,
     updateFoodIntroductionRequestDto: UpdateFoodIntroductionRequestDto,
   ) {
+    this.logger.log(
+      `Received request to update food introduction with id ${id}`,
+    );
     const storedFoodIntroductionEntity = await this.findFoodIntroductionOrThrow(
       id,
     );
@@ -105,6 +120,9 @@ export class FoodIntroductionsService {
   }
 
   async removeFoodIntroduction(id: string) {
+    this.logger.log(
+      `Received request to remove food introduction with id ${id}`,
+    );
     const storedFoodIntroductionEntity = await this.findFoodIntroductionOrThrow(
       id,
     );
