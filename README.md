@@ -26,9 +26,7 @@ $ yarn install
 > To first start with running the API, you need to copy
 > [.env.example](.env.example) to [.env](.env.docker-compose) and fill in with correct values.
 
-> `start`, `start:dev` and `start:debug` start scripts will spin up a virtualized Postgres database before starting the API. In order to get the database going, you need to copy
-> [.env.docker-compose.example](.env.docker-compose.example) to [.env.docker-compose](.env.docker-compose) with the path you
-> want for the database volume to be stored in.
+> `start`, `start:dev` and `start:debug` need a database up and running, and for that, use the `start:db` command.
 
 ```bash
 # development
