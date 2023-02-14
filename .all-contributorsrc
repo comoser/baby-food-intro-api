@@ -20,7 +20,8 @@
         "code",
         "doc",
         "ideas",
-        "tool"
+        "tool",
+        "review"
       ]
     },
     {
@@ -45,6 +46,15 @@
         "maintenance",
         "review",
         "tool"
+      ]
+    },
+    {
+      "login": "VitorFernandes2",
+      "name": "Vitor Hugo Silva Fernandes",
+      "avatar_url": "https://avatars.githubusercontent.com/u/51928276?v=4",
+      "profile": "https://github.com/VitorFernandes2",
+      "contributions": [
+        "code"
       ]
     }
   ],

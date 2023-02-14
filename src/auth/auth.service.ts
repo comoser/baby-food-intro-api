@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterUserRequestDto } from './dtos/register-user.request.dto';
 import { HttpResponseDto } from '../dtos/http.response.dto';
@@ -10,6 +10,8 @@ import { createParentEntityFactory } from '../parents/factories/create-parent-en
 
 @Injectable()
 export class AuthService {
+  private readonly logger: Logger = new Logger(AuthService.name);
+
   constructor(
     private readonly parentAuthIntegrationService: ParentIntegrationService,
     private readonly jwtService: JwtService,
@@ -19,6 +21,7 @@ export class AuthService {
     const payload = { username: user.email, sub: user.id };
     const accessToken = this.jwtService.sign(payload);
 
+    this.logger.log(`Received request to login ${payload.username}`);
     return HttpResponseDto.createHttpResponseDto<LoginUserResponseDto>(
       HttpStatus.OK,
       {
@@ -30,6 +33,9 @@ export class AuthService {
   }
 
   async registerUser(registerUserRequestDto: RegisterUserRequestDto) {
+    this.logger.log(
+      `Received request to register user ${registerUserRequestDto.email}`,
+    );
     const parentEntity = await createParentEntityFactory(
       registerUserRequestDto,
     );
@@ -39,6 +45,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<AuthUser> {
+    this.logger.log(`Validating user ${email}`);
     const parent = await this.parentAuthIntegrationService.findParentBy(email);
 
     if (parent && (await passwordMatches(password, parent.password))) {

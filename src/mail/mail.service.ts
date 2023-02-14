@@ -1,11 +1,13 @@
 import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { BabyEntity } from '../babies/baby.entity';
 import { ParentEntity } from '../parents/parent.entity';
 import { ShareBabyInvitationStatus } from '../babies/share-baby-invitation.entity';
 
 @Injectable()
 export class MailService {
+  private readonly logger: Logger = new Logger(MailService.name);
+
   constructor(private mailerService: MailerService) {}
 
   async sendShareBabyInvitation(
@@ -13,6 +15,10 @@ export class MailService {
     receiverEmail: string,
     baby: BabyEntity,
   ) {
+    this.logger.log(
+      `Received request to send share baby invitation from ${requester.email} to  ${receiverEmail} for baby with id ${baby.id}`,
+    );
+
     await this.mailerService.sendMail({
       to: receiverEmail,
       subject: 'Share Baby Invitation',
@@ -30,6 +36,10 @@ export class MailService {
     baby: BabyEntity,
     result: ShareBabyInvitationStatus,
   ) {
+    this.logger.log(
+      `Received request to answer share baby invitation from ${requester.email} to  ${otherParent.email} for baby with id ${baby.id}`,
+    );
+
     await this.mailerService.sendMail({
       to: requester.email,
       subject: 'Share Baby Invitation Answer',
