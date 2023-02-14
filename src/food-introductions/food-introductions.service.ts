@@ -17,7 +17,7 @@ import { UpdateFoodIntroductionResponseDto } from './dtos/update/update-food-int
 
 @Injectable()
 export class FoodIntroductionsService {
-  private readonly logger: Logger = new Logger(FoodIntroductionEntity.name);
+  private readonly logger: Logger = new Logger(FoodIntroductionsService.name);
 
   constructor(
     private readonly babyIntegrationService: BabyIntegrationService,
